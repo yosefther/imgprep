@@ -1,1 +1,4 @@
-"""Dataset health stats: per-class counts, imbalance warnings, resolution/format distribution, corrupted files."""
+"""Dataset health stats.
+
+Per-class counts, imbalance warnings, resolution/format distribution, corrupted files.
+"""
