@@ -29,19 +29,6 @@ imgprep handles all three with one command each.
 - `stats`: per-class counts, imbalance warnings, resolution and format distribution, corrupted-file detection
 - Rich terminal output and machine-readable JSON reports
 - Fully typed, tested, and checked in CI
-
----
-
-## Installation
-
-Requires Python 3.12+.
-
-```bash
-git clone https://github.com/yosefther/imgprep.git
-cd imgprep
-uv sync          # or: pip install -e .
-```
-
 ---
 
 ## Usage
