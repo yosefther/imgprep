@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-imgprep = "imgprep:main"
+imgprep = "imgprep.cli:app"
 
 [build-system]
 requires = ["uv_build>=0.12.3,<0.13.0"]
@@ -27,3 +27,19 @@ dev = [
     "pytest>=9.1.1",
     "ruff>=0.17.1",
 ]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["imagehash.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
