@@ -5,9 +5,12 @@ Thin layer: parse args, call core modules, print output.
 
 import typer
 
-app = typer.Typer(no_args_is_help=True)
+app = typer.Typer(help="Clean and prepare image datasets for computer vision.")
 
+@app.command()
+def stats (folder:str):
+    typer.echo(f"would anlize {folder}")
 
-@app.callback()
-def main() -> None:
-    """A command-line toolkit for cleaning and preparing image datasets."""
+@app.command()
+def version()->None:
+    typer.echo("imgprep 0.1.0v")
