@@ -3,12 +3,14 @@
 Corrupted files are reported instead of raising.
 """
 
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Final
 
 from PIL import Image
 
 IMAGE_EXTENSIONS: Final = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+UNLABELED: Final = "unlabeled"
 
 
 def is_image_file(path: Path) -> bool:
@@ -52,26 +54,30 @@ def find_images(root: Path) -> list[Path]:
     return sorted(images)
 
 
-def class_of(path): ...
-def scan_dataset(): ...
+def class_of(path: Path, root: Path) -> str:
+    """Return the first folder under root, e.g. root/cats/x.jpg -> "cats".
+
+    Images sitting directly in root have no class and get UNLABELED.
+    """
+    parts = path.relative_to(root).parts
+    if len(parts) == 1:
+        return UNLABELED
+    return parts[0]
 
 
-# FUNCTION scan_dataset(root) -> ScanResult
-# valid   = empty list
-# corrupt = empty list
-# FOR each path in find_images(root)
-# IF is_valid_image(path)
-# add (path, class_of(path, root)) to valid
-# ELSE
-# add path to corrupt
-# return ScanResult(valid, corrupt)
+@dataclass
+class ScanResult:
+    valid: list[tuple[Path, str]] = field(default_factory=list)  # (path, class name)
+    corrupt: list[tuple[Path, str]] = field(default_factory=list)  # (path, reason)
 
 
-# FUNCTION class_of(path, root) -> string
-# return the name of the folder that directly contains path
-# dataset/cats/cat1.jpg -> "cats"
-# an image sitting directly in root has no class -> decide: return "" or "unlabeled"
-
-# DATA ScanResult
-# valid:   list of (path, class name)
-# corrupt: list of paths
+def scan_dataset(root: Path) -> ScanResult:
+    """Find every image under root and sort it into valid (with class) or corrupt (with reason)."""
+    result = ScanResult()
+    for path in find_images(root):
+        reason = check_image(path)
+        if reason is None:
+            result.valid.append((path, class_of(path, root)))
+        else:
+            result.corrupt.append((path, reason))
+    return result
